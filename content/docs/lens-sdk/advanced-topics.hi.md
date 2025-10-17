@@ -70,50 +70,52 @@ import { Site } from '@riffcc/lens-sdk/programs';
 
 यह पैटर्न गैर-ग्राहक अनुप्रयोगों के निर्माण के लिए मौलिक है जहां उपयोगकर्ताओं का पूर्ण नियंत्रण है।
 
-### 2. Managing Peerbit Client Externally
+### 2.बाहरी रूप से पीयरबिट क्लाइंट का प्रबंधन
 
-In some complex applications, you may need to manage the lifecycle of the Peerbit P2P client yourself, especially if your application uses other Peerbit programs alongside the `Site` program.
+कुछ जटिल अनुप्रयोगों में, आपको खुद पी2पी क्लाइंट के जीवनचक्र का प्रबंधन करने की आवश्यकता हो सकती है, विशेष रूप से यदि आपका अनुप्रयोग  `साइट`  कार्यक्रम के साथ अन्य पीयरबिट कार्यक्रमों का उपयोग करता है।.
 
-The `LensService` constructor accepts an optional `peerbit` client instance. When a client is provided this way, the service will not attempt to manage its lifecycle.
+`लेन्स सर्विस कंस्ट्रक्टर`एक वैकल्पिक `पेर्बिट`  क्लाइंट इंस्टैंस को स्वीकार करता है। जब किसी ग्राहक को इस तरह से प्रदान किया जाता है, तो सेवा अपने जीवनचक्र को प्रबंधित करने का प्रयास नहीं करेगी।.
 
-**Use Case:** Your application needs to run a `Site` program and a separate custom `Chat` program on the same Peerbit node.
+**केस का करें इस्तेमाल:** आपके एप्लिकेशन को एक `साइट` प्रोग्राम और एक अलग कस्टम `चैट`प्रोग्राम चलाने की आवश्यकता है
 
-```typescript
+```टाइप्स्क्रिप्ट
 import { Peerbit } from 'peerbit';
 import { LensService } from '@riffcc/lens-sdk';
 import { ChatProgram } from './my-chat-program'; // Your custom program
 
-async function setup() {
-  // 1. Create and manage the Peerbit client yourself.
-  const peerbit = await Peerbit.create({ directory: './shared-p2p-node' });
+अतुल्यकालिक फ़ंक्शन सेटअप() {
+  // 1. सहकर्मीबिट क्लाएंट को स्वयं बनाएँ और प्रबंधित करें.
+  कॉन्स्टेंट पीरबिट = Peerbit.create({ निर्देशिका: './shared-p2p-node' }) का इंतजार करें;
 
-  // 2. Pass the external client to the LensService.
-  const lens = new LensService({ peerbit: peerbit, debug: true });
+
+  // 2.बाहरी क्लाइंट को लेंस सेवा में पास करें.
+ स्थिर लेंस = नया लेंस सेवा ({ पीरबिट: पीरबिट, डिबग: ट्रू });
   
-  // 3. You can now open a Site...
-  await lens.openSite('EXISTING_SITE_ADDRESS');
-  
-  // 4. ...and also open your other custom programs on the same node.
-  const chat = await peerbit.open(new ChatProgram());
+  // 3. अब आप एक साइट खोल सकते हैं...
+लेंस. opensite ('easeing_site_adress) का इंतजार करें;
 
-  // ... application logic ...
+  // 4. ... और एक ही नोड पर अपने अन्य कस्टम प्रोग्राम भी खोलें.
+const चैट = await peerbit.open(नया चैटप्रोग्राम());
 
-  // 5. You are responsible for stopping the client.
-  // The lens.stop() call will NOT stop the external client.
-  await lens.stop(); // Only stops the Site program and FederationManager
-  await peerbit.stop();
+  // ...अनुप्रयोग तर्क ...
+
+  // 5. आप क्लाइंट को रोकने के लिए जिम्मेदार हैं.
+  // lens.stop() कॉल बाहरी क्लाइंट को नहीं रोकेगा।
+await lens.stop(); // केवल साइट प्रोग्राम और फ़ेडरेशन मैनेजर को रोकता है
+await peerbit.stop();
 }
 ```
 
-### 3. Customizing Replication (`SiteArgs`)
+### 3.अनुकूलन प्रतिकृति (`साइटआर्ग्स`)
 
-By default, a `Site` program attempts to replicate its data stores with a low replication factor to save resources. For applications requiring higher availability or performance, you can provide custom replication arguments when opening a site.
+डिफ़ॉल्ट रूप से, एक`साइट`प्रोग्राम संसाधनों को बचाने के लिए कम प्रतिकृति कारक के साथ अपने डेटा स्टोर को दोहराने का प्रयास करता है। उच्च उपलब्धता या प्रदर्शन की आवश्यकता वाले अनुप्रयोगों के लिए, आप एक साइट खोलने के दौरान कस्टम प्रतिकृति तर्क प्रदान कर सकते हैं.
 
-The `SiteArgs` object allows you to specify `replicate` options for each data store within the `Site`.
+`साइटआर्ग्स` ऑब्जेक्ट आपको `साइट` के भीतर प्रत्येक डेटा स्टोर के लिए `प्रतिकृति` विकल्प निर्दिष्ट करने की अनुमति देता है।
 
-**Use Case:** You are running a dedicated "pinning" node that should store a complete copy of all data for maximum availability.
+**उपयोग मामला:** आप एक समर्पित "पिनिंग" नोड चला रहे हैं, जिसे अधिकतम उपलब्धता के लिए सभी डेटा की एक पूरी प्रतिलिपि संग्रहीत करनी चाहिए
+.
 
-```typescript
+```टाइप्स्क्रिप्ट
 import { Site } from '@riffcc/lens-sdk/programs';
 
 const dedicatedPinningNodeArgs = {
@@ -131,62 +133,59 @@ const site = new Site(myPublicKey);
 await lens.openSite(site, { siteArgs: dedicatedPinningNodeArgs });
 ```
 
-For detailed replication options, refer to the Peerbit documentation on `ReplicationOptions`.
+विस्तृत प्रतिकृति विकल्प के लिए, विस्तृत प्रतिकृति विकल्प के लिए `प्रतिकृति विकल्प`.
 
-### 4. Understanding Federation Performance
+### 4. महासंघ के प्रदर्शन को समझना
 
-The `FederationManager` is designed to be efficient, but in large-scale networks, it's helpful to understand its behavior:
+`फेडरेशनमैनेजर`को कुशल होने के लिए डिजाइन किया गया है, लेकिन बड़े पैमाने पर नेटवर्क में, यह अपने व्यवहार को समझने में सहायक है:
 
-* **Historical Sync:** This is the most resource-intensive part of federation. When a site with thousands of releases is subscribed to, the initial sync can take time and consume bandwidth. This process runs in the background and does not block other operations.
-* **Live Sync:** Live updates via pub/sub are extremely lightweight. A `FederationUpdate` message only contains the cryptographic hashes and metadata of changed entries, not the full data, making real-time updates very fast.
-* **Network Topology:** Federation performance is dependent on the underlying libp2p network. For optimal performance, ensure that nodes (especially those that frequently federate with each other) are well-connected. You can use `peerbit.dial()` to manually establish connections between nodes if needed.
+* **ऐतिहासिक समन्वयन:** यह संघ का सबसे संसाधन प्रधान हिस्सा है। जब कोई साइट हजारों रिलीज के साथ सदस्यता लेती है, तो प्रारंभिक सिंक समय ले सकता है और बैंडविड्थ का उपभोग कर सकता है। यह प्रक्रिया पृष्ठभूमि में चलती है और अन्य संचालन को अवरुद्ध नहीं करती है.
+* **लाइव सिंक:** pub/sub के माध्यम से लाइव अपडेट बेहद हल्के होते हैं। एक `फेडरेशन अपडेट` संदेश में केवल क्रिप्टोग्राफिक हैश और परिवर्तित प्रविष्टियों के मेटाडेटा को शामिल किया गया है, न कि पूर्ण डेटा, जो वास्तविक समय अपडेट को बहुत तेजी से बनाते हैं.
+* **नेटवर्क टोपोलॉजी :** संघ का प्रदर्शन अंतर्निहित libp2p नेटवर्क पर निर्भर है। इष्टतम प्रदर्शन के लिए, सुनिश्चित करें कि नोड्स (विशेष रूप से वे जो अक्सर एक दूसरे से पोषित होते हैं) अच्छी तरह से जुड़े हुए हैं। यदि आवश्यक हो तो नोड्स के बीच कनेक्शन को मैन्युअल रूप से स्थापित करने के लिए आप `peerbit.dial ()` का उपयोग कर सकते हैं।
+### 5. उत्पादन-स्तर की सामग्री मॉडरेशन (`ब्लॉक-कंटेंट` और एंजेलिस्ट)
 
-### 5. Production-Level Content Moderation (`BlockedContent` and Denylists)
+लेंस एसडीके को एक शक्तिशाली सामग्री मॉडरेशन आर्किटेक्चर के साथ डिजाइन किया गया है जो मूल बुनियादी ढांचे के लिए सरल इन-एप फिल्टरिंग से परे है। यह खंड पूरी दृष्टि को रेखांकित करता है, जो वर्तमान में उपलब्ध सुविधाओं से अलग है जो प्रगति में हैं या भविष्य के लिए योजनाबद्ध हैं।
 
-The Lens SDK is designed with a powerful content moderation architecture that extends beyond simple in-app filtering to the core infrastructure. This section outlines the full vision, separating what is currently available from features that are in progress or planned for the future.
+#### लॉजिकल डेलेट बनाम हार्ड डेलेट
 
-#### Logical Deletes vs. Hard Deletes
+सामग्री हटाने के दो रूपों के बीच अंतर करना महत्वपूर्ण है:
 
-It is important to distinguish between the two forms of content removal:
+* **`deleteRelease()` (लॉजिकल डिलीट):** यह एक मानक सुविधा है। जब कोई व्यवस्थापक `deleteRelease()` को कॉल करता है, तो यह साइट के डेटाबेस से `Release` दस्तावेज़ को हटा देता है। यह एप्लिकेशन के दृश्य में एक "सॉफ्ट" या "लॉजिकल" डिलीट है। IPFS पर अंतर्निहित डेटा फ़ाइल तुरंत प्रभावित नहीं होती है।
 
-* **`deleteRelease()` (Logical Delete):** This is a standard feature. When an administrator calls `deleteRelease()`, it removes the `Release` document from the site's database. This is a "soft" or "logical" delete within the application's view. The underlying data file on IPFS is not immediately affected.
+* **`ब्लॉक्डकंटेंट` (हार्ड डिलीट फाउंडेशन):** यह स्कीमा "हार्ड डिलीट" प्रक्रिया का आधार है। इसे एक स्थायी, सत्यापन योग्य रिकॉर्ड बनाने के लिए डिज़ाइन किया गया है कि सामग्री का एक टुकड़ा (जिसकी CID द्वारा पहचान की गई हो) न केवल ऐप से, बल्कि पूरे स्टोरेज इंफ्रास्ट्रक्चर से हटा दिया जाना चाहिए।
 
-* **`BlockedContent` (Hard Delete Foundation):** This schema is the foundation for a "hard delete" process. It is designed to create a permanent, verifiable record that a piece of content (identified by its CID) should be purged not just from the app, but from the entire storage infrastructure.
+#### "बुरे अंशों" का मॉडरेशन पैटर्न: वर्तमान स्थिति और भविष्य की दृष्टि
 
-#### The "Bad Bits" Moderation Pattern: Current State and Future Vision
+मजबूत मॉडरेशन के लिए अनुशंसित पैटर्न ["बैड बिट्स" इनकार सूची](https://badbits.dwebops.pub/) जैसे स्थापित इनकार सूची प्रारूपों के सिद्धांतों का पालन करता है।
 
-The recommended pattern for robust moderation follows the principles of established denylist formats like the ["Bad Bits" denylist](https://badbits.dwebops.pub/).
+यहां कार्य प्रवाह है, जिसमें प्रत्येक घटक की स्थिति शामिल है:
 
-Here is the workflow, including the status of each component:
+1. **प्रशासक क्रिया:** एक प्रशासक अपनी आईपीएफ की सामग्री पहचानकर्ता (सीआईडी) द्वारा सामग्री के एक टुकड़े की पहचान करता है जिसे ब्लॉक करने की आवश्यकता है.
 
-1. **Administrator Action:** An administrator identifies a piece of content by its IPFS Content Identifier (CID) that needs to be blocked.
+2. **डबल हैगिंग और रिकॉर्ड निर्माण (प्रगति पर है):**
+    * **फंगक्शनैलिटी:** गोपनीयता की रक्षा के लिए, मूल सीआईडी है **डबल-हैश** (e.g., SHA256(SHA256(CID))) जमा करने से पहले। यह आकस्मिक पर्यवेक्षकों को ब्लॉक सूची पर सामग्री की पहचान करने से रोकता है.
+    * **स्थिति:** इस क्रिया को करने के लिए उच्च-स्तरीय `लेंस सेवा` विधियाँ (जैसे, `ब्लॉककंटेंट()`) **वर्तमान में प्रगति पर हैं**। इससे प्रशासकों को सीधे प्रोग्राम इंटरैक्शन की आवश्यकता के बिना `ब्लॉककंटेंट` स्टोर में प्रविष्टियाँ जोड़ने का एक सरल, सुरक्षित तरीका मिल जाएगा।
 
-2. **Double Hashing and Record Creation (In Progress):**
-    * **Functionality:** To protect privacy, the original CID is **double-hashed** (e.g., SHA256(SHA256(CID))) before being stored. This prevents casual observers from identifying the content on the blocklist.
-    * **Status:** The high-level `LensService` methods to perform this action (e.g., `blockContent()`) are **currently in progress**. This will provide a simple, secure way for administrators to add entries to the `blockedContent` store without needing direct program interaction.
+3.**इंफ्रास्ट्रक्चर सिंक्रोनाइज़ेशन (भविष्य में कार्यान्वयन):**
+* **विज़न:** दीर्घकालिक दृष्टिकोण एक विश्वसनीय बैकएंड सेवा या "ऑपरेटर" को `साइट` के `ब्लॉककंटेंट` स्टोर की निगरानी करने के लिए स्थापित करना है। यह ऑपरेटर संग्रहीत हैश से एक मानक इनकार सूची फ़ाइल तैयार करेगा और उसे सभी मुख्य इंफ्रास्ट्रक्चर में वितरित करेगा।
+* **स्थिति:** इस **ऑपरेटर सेवा के कार्यान्वयन की योजना भविष्य में बनाई गई है**। पूरा होने पर, यह `ब्लॉककंटेंट` स्टोर को सत्य के एक विकेन्द्रीकृत स्रोत के रूप में कार्य करने में सक्षम बनाएगा जो IPFS नोड्स, क्लस्टर्स और CDN को सेवा देने से मना करने और अवरुद्ध सामग्री को स्थायी रूप से हटाने का निर्देश दे सकता है।
+#### मॉडरेशन विशेषताओं का सारांश
 
-3. **Infrastructure Synchronization (Future Implementation):**
-    * **Vision:** The long-term vision is for a trusted backend service or "Operator" to monitor the `Site`'s `blockedContent` store. This Operator will generate a standard denylist file from the stored hashes and distribute it to all core infrastructure.
-    * **Status:** The implementation of this **Operator service is planned for the future**. When complete, it will enable the `blockedContent` store to act as a decentralized source of truth that can instruct IPFS nodes, clusters, and CDNs to refuse to serve and permanently delete blocked content.
+| फ़ीचर | स्थिति | विवरण |
+|------------------------------------------|-------------------|---------------------------------------------------------------------------------------------------|
+| **तार्किक विलोपन** (`रिलीज़ हटाएं`) | ✅ **कार्यान्वित** | `साइट` के डेटाबेस से सामग्री मेटाडेटा हटाता है। |
+| **ब्लॉकलिस्ट स्कीमा** (`ब्लॉककंटेंट`) | ✅ **कार्यान्वित** | मॉडरेशन निर्णयों को रिकॉर्ड करने के लिए ऑन-चेन डेटा संरचना मौजूद है। |
+| **ब्लॉकिंग के लिए सेवा API** (`ब्लॉककंटेंट`) | ⏳ **प्रगति पर** | `ब्लॉककंटेंट` स्टोर के आसान और सुरक्षित प्रबंधन के लिए उच्च-स्तरीय `लेंस सेवा` विधियाँ। |
+| **इंफ्रास्ट्रक्चर सिंक के लिए ऑपरेटर** | 🗺️ **भविष्य** | IPFS नोड्स, क्लस्टर्स और CDNs के लिए ऑन-चेन ब्लॉकलिस्ट के सिंकिंग को स्वचालित करने के लिए एक सेवा। |
 
-#### Summary of Moderation Features
+यह रोडमैप मौजूदा क्षमताओं से लेकर एक व्यापक, एंड-टू-एंड सामग्री मॉडरेशन प्रणाली तक एक स्पष्ट रास्ता प्रदान करता है जो शक्तिशाली और गोपनीयता-प्रदाता दोनों है।
 
-| Feature                                   | Status            | Description                                                                                             |
-|-------------------------------------------|-------------------|---------------------------------------------------------------------------------------------------------|
-| **Logical Deletion** (`deleteRelease`)      | ✅ **Implemented** | Removes content metadata from the `Site`'s database.                                                      |
-| **Blocklist Schema** (`BlockedContent`)   | ✅ **Implemented** | The on-chain data structure for recording moderation decisions exists.                                    |
-| **Service API for Blocking** (`blockContent`) | ⏳ **In Progress**  | High-level `LensService` methods for easy and secure management of the `blockedContent` store.          |
-| **Operator for Infrastructure Sync**        | 🗺️ **Future**       | A service to automate the syncing of the on-chain blocklist to IPFS nodes, clusters, and CDNs.        |
+### 6.प्रत्यक्ष प्रोग्राम इंटरैक्शन (उन्नत उपयोग मामलों के लिए)
 
-This roadmap provides a clear path from the current capabilities to a comprehensive, end-to-end content moderation system that is both powerful and privacy-preserving.
+जबकि `लेंस सर्विस` का उपयोग 99% इंटरैक्शन के लिए किया जाना चाहिए, ऐसे दुर्लभ मामले हो सकते हैं जहां 'साइट' कार्यक्रम के साथ प्रत्यक्ष संवाद आवश्यक है (जैसे, सर्वर-साइड प्रशासनिक स्क्रिप्ट).
+सक्रिय`साइट` कार्यक्रम उदाहरण`एलेंस सर्विस. साइट प्रोग्राम`के माध्यम से उपलब्ध है।.
 
-### 6. Direct Program Interaction (For Advanced Use Cases)
-
-While the `LensService` should be used for 99% of interactions, there may be rare cases where direct interaction with the `Site` program is necessary (e.g., in server-side administrative scripts).
-
-The active `Site` program instance is available via `lensService.siteProgram`.
-
-**Use Case:** A script needs to inspect the low-level replication state of a specific database.
+**उपयोग मामला:** एक स्क्रिप्ट को एक विशिष्ट डेटाबेस की निम्न-स्तरीय प्रतिकृति स्थिति का निरीक्षण करने की आवश्यकता है.
 
 ```typescript
 // This is NOT a typical application pattern. Use with caution.
@@ -205,4 +204,4 @@ if (site) {
 }
 ```
 
-**Warning:** Bypassing the `LensService` means you lose its safety checks, error handling, and stable API contract. This should only be done when you have a deep understanding of the Peerbit framework and the internal logic of the `Site` program.
+**वॉर्निंग:** `एलेंस सर्विस` को बाईपास करने का मतलब है कि आप अपनी सुरक्षा जांच, त्रुटि हैंडलिंग और स्थिर एपीआई अनुबंध खो देते हैं। यह तभी किया जाना चाहिए जब आपके पास पीयरबिट ढांचे और `साइट` कार्यक्रम के आंतरिक तर्क की गहरी समझ हो।.

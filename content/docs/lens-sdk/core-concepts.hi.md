@@ -5,11 +5,11 @@ title = 'Core Concepts'
 weight = 2
 +++
 
-The Lens SDK is designed around a set of robust, interoperable components. A thorough understanding of these core concepts is essential for leveraging the full power and security of the SDK. This document provides a detailed overview of the foundational pillars of the Lens architecture: the `LensService`, the `Site` Program, the Federation Model, and the Access Control System.
+लेंस एसडीके को मजबूत, इंटरऑपरेबल घटकों के सेट के आसपास डिजाइन किया गया है। एसडीके की पूर्ण शक्ति और सुरक्षा का लाभ उठाने के लिए इन कोर अवधारणाओं की पूरी समझ आवश्यक है। यह दस्तावेज लेंस वास्तुकला के मूलभूत स्तंभों का एक विस्तृत विवरण प्रदान करता है: `lensservice `, `site` कार्यक्रम, फेडरेशन मॉडल और एक्सेस कंट्रोल सिस्टम.
 
-## 1. The Layered Architecture
+## 1. लेयर्ड आर्किटेक्चर
 
-The SDK employs a strict, layered architecture to promote modularity, security, and maintainability. Each layer has a distinct responsibility, and communication flows vertically through well-defined interfaces.
+एसडीके मॉड्यूलरता, सुरक्षा और रखरखाव को बढ़ावा देने के लिए एक सख्त, लेयर्ड आर्किटेक्चर को नियोजित करता है। प्रत्येक परत की एक विशिष्ट जिम्मेदारी होती है, और अच्छी तरह से परिभाषित इंटरफेस के माध्यम से संचार ऊर्ध्वाधर रूप से बहता है।
 
 ```mermaid
 graph TD
@@ -23,7 +23,7 @@ graph TD
 
 ```
 
-* **Service Layer (`LensService`):** This is the canonical public interface for the SDK. It is the sole entry point for any consuming application. Its purpose is to provide a stable, high-level, and asynchronous API that completely abstracts the complexities of the underlying P2P network and program logic. The service layer is responsible for managing the lifecycle of the P2P client and the active `Site` program.
+* **Service Layer (`LensService`):** यह sdk के लिए कैननिकल पब्लिक इंटरफेस है। किसी भी उपभोक्ता अनुप्रयोग के लिए यह एकमात्र प्रवेश बिंदु है। इसका उद्देश्य एक स्थिर, उच्च स्तर और अतुल्यकालिक एपीआई प्रदान करना है जो पूरी तरह से अंतर्निहित p2p नेटवर्क और प्रोग्राम तर्क की जटिलताओं को अमूर्त करता है। सेवा स्तर पी2पी क्लाइंट के जीवन चक्र और सक्रिय 'साइट' कार्यक्रम के प्रबंधन के लिए जिम्मेदार है।.
 
 * **Program Layer (`Site` Program):** This is the "on-chain" or decentralized backend of the application. The `Site` program is a stateful, replicable "smart contract" that defines the application's data schemas, databases, and the immutable rules governing data access. It is the ultimate source of truth for all content and permissions within a given `Site`.
 
