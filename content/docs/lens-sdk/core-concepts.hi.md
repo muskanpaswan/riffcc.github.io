@@ -5,7 +5,7 @@ title = 'Core Concepts'
 weight = 2
 +++
 
-लेंस एसडीके को मजबूत, इंटरऑपरेबल घटकों के सेट के आसपास डिजाइन किया गया है। एसडीके की पूर्ण शक्ति और सुरक्षा का लाभ उठाने के लिए इन कोर अवधारणाओं की पूरी समझ आवश्यक है। यह दस्तावेज लेंस वास्तुकला के मूलभूत स्तंभों का एक विस्तृत विवरण प्रदान करता है: `lensservice `, `site` कार्यक्रम, फेडरेशन मॉडल और एक्सेस कंट्रोल सिस्टम.
+लेंस एसडीके को मजबूत, इंटरऑपरेबल घटकों के सेट के आसपास डिजाइन किया गया है। एसडीके की पूर्ण शक्ति और सुरक्षा का लाभ उठाने के लिए इन कोर अवधारणाओं की पूरी समझ आवश्यक है। यह दस्तावेज लेंस वास्तुकला के मूलभूत स्तंभों का एक विस्तृत विवरण प्रदान करता है: `एलेंस सर्विस `, `साइट` कार्यक्रम, फेडरेशन मॉडल और एक्सेस कंट्रोल सिस्टम.
 
 ## 1. लेयर्ड आर्किटेक्चर
 
@@ -23,79 +23,81 @@ graph TD
 
 ```
 
-* **Service Layer (`LensService`):** यह sdk के लिए कैननिकल पब्लिक इंटरफेस है। किसी भी उपभोक्ता अनुप्रयोग के लिए यह एकमात्र प्रवेश बिंदु है। इसका उद्देश्य एक स्थिर, उच्च स्तर और अतुल्यकालिक एपीआई प्रदान करना है जो पूरी तरह से अंतर्निहित p2p नेटवर्क और प्रोग्राम तर्क की जटिलताओं को अमूर्त करता है। सेवा स्तर पी2पी क्लाइंट के जीवन चक्र और सक्रिय 'साइट' कार्यक्रम के प्रबंधन के लिए जिम्मेदार है।.
+* **Service Layer (``एलेंस सर्विस`):** यह sdk के लिए कैननिकल पब्लिक इंटरफेस है। किसी भी उपभोक्ता अनुप्रयोग के लिए यह एकमात्र प्रवेश बिंदु है। इसका उद्देश्य एक स्थिर, उच्च स्तर और अतुल्यकालिक एपीआई प्रदान करना है जो पूरी तरह से अंतर्निहित p2p नेटवर्क और प्रोग्राम तर्क की जटिलताओं को अमूर्त करता है। सेवा स्तर पी2पी क्लाइंट के जीवन चक्र और सक्रिय 'साइट' कार्यक्रम के प्रबंधन के लिए जिम्मेदार है।.
 
-* **Program Layer (`Site` Program):** This is the "on-chain" or decentralized backend of the application. The `Site` program is a stateful, replicable "smart contract" that defines the application's data schemas, databases, and the immutable rules governing data access. It is the ultimate source of truth for all content and permissions within a given `Site`.
+* **Program Layer (`साइट` Program):** यह है "ऑन-चेन" या अनुप्रयोग के विकेन्द्रीकृत बैकएण्ड.`साइट` कार्यक्रम एक राज्य है, प्रतिकृति "स्मार्ट कॉन्ट्रैक्ट" जो अनुप्रयोग के डाटा स्कीमा को परिभाषित करता है, डेटाबेस, और डेटा अभिगम को नियंत्रित करने वाले अपरिवर्तनीय नियम. यह सभी सामग्री और अनुमति के लिए एक दिए गए के भीतर सत्य का अंतिम स्रोत है `साइट`.
 
-* **Federation Layer (`FederationManager`):** This is a specialized, internal component managed by the `LensService`. It orchestrates all inter-program communication. While the `Site` program defines *what* data exists, the `FederationManager` defines *how* that data is discovered, synchronized, and shared between different `Site` instances.
+* **Federation Layer (`FederationManager`):** यह एक विशेषीकृत है, आंतरिक घटक द्वारा प्रबंधित`एलेंस सर्विस`.यह सभी इंटर-प्रोग्राम संचार को व्यवस्थित करता है.जबकि प्रोग्राम * क्या डेटा मौजूद है,`FederationManager` को परिभाषित करता है कि डेटा की खोज की गई है, तुल्यकालिक, और विभिन्न उदाहरणों के बीच साझा। `साइट`.
 
-* **P2P Framework Layer (Peerbit):** The foundational layer that provides the necessary primitives for peer-to-peer networking, database creation, data replication, and cryptographic identity. The Lens SDK is built directly upon this robust framework.
+* **P2P Framework Layer (Peerbit):**मूलभूत परत जो पीयर-टू-पीयर नेटवर्किंग, डेटाबेस निर्माण के लिए आवश्यक प्राइमिटिव प्रदान करता है, डेटा प्रतिकृति, और क्रिप्टोग्राफिक पहचान. लेंस एसडीके इस मजबूत ढांचे पर सीधे बनाया गया है.
 
-## 2. The `Site` Program: A Sovereign Digital Entity
+## 2. The `साइट` Program: A Sovereign Digital Entity
 
-The central construct in the Lens ecosystem is the `Site`. Conceptually, a `Site` is a sovereign, addressable, and self-contained digital space. It functions as a decentralized application instance, complete with its own databases and access control system.
+लेंस इकोसिस्टम में केंद्रीय निर्माण है `साइट`. कन्सेप्चूअल्ली,एक `साइट` एक संप्रभु, पता योग्य और स्व-निहित डिजिटल स्थान है। यह एक विकेंद्रीकृत एप्लिकेशन इंस्टेंस के रूप में कार्य करता है, जिसमें अपनी स्वयं की डेटाबेस और पहुँच नियंत्रण प्रणाली होती है।
 
-### Key Characteristics of a `Site`
+### Key Characteristics of a `साइट`
 
-* **Unique, Verifiable Address:** Every `Site` is identified by a permanent, cryptographic address derived from its owner's public key and its initial parameters. This address is used to locate, open, and interact with the `Site` on the network.
-* **Structured Data Stores:** A `Site` is a collection of discrete, purpose-built data stores for `Releases`, `ContentCategories`, `Subscriptions`, and more. This structured approach ensures data integrity and organizational clarity.
-* **Explicit Permissions:** Access to a `Site` is not public by default. All write permissions are explicitly granted by an **Administrator** through a robust Role-Based Access Control (RBAC) system.
-
+* **Unique, Verifiable Address:**हर `साइट` को उसके मालिक की सार्वजनिक कुंजी और उसकी प्रारंभिक पैरामीटर्स से निकाले गए स्थायी, क्रिप्टोग्राफिक पते द्वारा पहचाना जाता है। इस पते का उपयोग नेटवर्क पर `साइट` को ढूँढने, खोलने और उसके साथ इंटरैक्ट करने के लिए किया जाता है।
+* **Structured Data Stores:**`साइट` विभिन्न, विशेष उद्देश्य के लिए बनाए गए डेटा स्टोर्स का संग्रह है, जैसे कि `Releases`, `ContentCategories`, `Subscriptions` और अन्य। यह संरचित दृष्टिकोण डेटा की अखंडता और संगठनात्मक स्पष्टता सुनिश्चित करता है।
+* **स्पष्ट अनुमतियाँ:** `साइट` तक पहुँच डिफ़ॉल्ट रूप से सार्वजनिक नहीं होती है। सभी लेखन अनुमतियाँ स्पष्ट रूप से एक **प्रशासक** द्वारा एक मजबूत Role-Based Access Control (RBAC) प्रणाली के माध्यम से प्रदान की जाती हैं।
 ## 3. The Federation Model: Principled Data Exchange
 
-Federation is the process by which independent `Site` instances share data. The Lens SDK implements a principled, subscription-based model to ensure that all data exchange is intentional and secure.
+फेडरेशन वह प्रक्रिया है जिसके द्वारा स्वतंत्र `साइट` उदाहरण डेटा साझा करते हैं। Lens SDK एक सिद्धांत-आधारित, सब्सक्रिप्शन मॉडल को लागू करता है ताकि सुनिश्चित किया जा सके कि सभी डेटा विनिमय जानबूझकर और सुरक्षित रूप से हो।
 
 ### The Federation Lifecycle
 
-1. **Explicit Subscription:** The process is initiated by a user with `subscription:manage` permission (typically a `Moderator` or `Admin`). To federate, they create a `Subscription` record containing the target `Site`'s address. This action is a deliberate declaration of trust.
+1. **Explicit Subscription:**यह प्रक्रिया उस उपयोगकर्ता द्वारा शुरू की जाती है जिसके पास `subscription:manage` अनुमति है (आमतौर पर एक `मॉडरेटर` या `एडमिन`)। फ़ेडरेट करने के लिए, वे एक `सब्सक्रिप्शन` रिकॉर्ड बनाते हैं जिसमें लक्ष्य `साइट` का पता शामिल होता है। यह क्रिया विश्वास की जानबूझकर घोषणा है।
 
-2. **State Synchronization:** Upon the creation of a `Subscription`, the `FederationManager` performs two types of synchronization:
-    * **Historical Sync:** A one-time process that connects to the remote `Site` and replicates its existing public content (e.g., `Releases`).
-    * **Live Sync:** The manager subscribes to the remote `Site`'s dedicated pub/sub topic, creating a persistent, real-time communication channel for immediate updates.
+2. **राज्य समकालिकीकरण:** `Subscription` के निर्माण के समय, `FederationManager` दो प्रकार के समकालिकीकरण करता है:
+    * **ऐतिहासिक समन्वय:** एक एकबारगी प्रक्रिया जो रिमोट `साइट` से जुड़ती है और इसके मौजूदा सार्वजनिक सामग्री (जैसे, `रिलीज़`) की नकल करती है।
+    * **लाइव सिंक:** प्रबंधक रिमोट `साइट` के समर्पित पब/सबसक्राइब टॉपिक को सब्सक्राइब करता है, जिससे तात्कालिक अपडेट के लिए एक स्थायी, वास्तविक समय संचार चैनल बनता है।
 
-3. **Data Provenance:** All data received via federation is immutable and retains the cryptographic signature of its original author and the address of its originating `Site`. This guarantees that the source of all content can be verified.
+3. **डेटा प्रावेनेंस:** फ़ेडरेशन के माध्यम से प्राप्त सभी डेटा अपरिवर्तनीय हैं और इसके मूल लेखक के क्रिप्टोग्राफ़िक हस्ताक्षर और इसके उत्पत्ति वाले `साइट` का पता रखते हैं। यह सुनिश्चित करता है कि सभी सामग्री का स्रोत सत्यापित किया जा सकता है।
 
-4. **Lifecycle Termination:** If a `Subscription` is deleted, the `FederationManager` performs a cleanup operation, purging all data associated with the unsubscribed `Site` from its local databases.
+4.**लाइफसाइकिल समाप्ति:** यदि कोई `Subscription` हटाया जाता है, तो `FederationManager` एक क्लीनअप ऑपरेशन करता है, जिससे सभी डेटा जो अनसब्सक्राइब किए गए `साइट` से संबंधित हैं, उसके स्थानीय डेटाबेस से हटा दिए जाते हैं।
 
 ## 4. The Access Control System (RBAC)
 
-Security is integral to the `Site` program. The system is built on a robust and secure **Role-Based Access Control (RBAC)** model, managed by a dedicated internal `RoleBasedccessController`. This controller is the ultimate authority for all actions within a `Site`.
+सुरक्षा `साइट` प्रोग्राम का अभिन्न हिस्सा है। सिस्टम एक मजबूत और सुरक्षित **रोल-आधारित एक्सेस कंट्रोल (RBAC)** मॉडल पर आधारित है, जिसे एक समर्पित आंतरिक `RoleBasedccessController` द्वारा प्रबंधित किया जाता है। यह कंट्रोलर `साइट` के भीतर सभी कार्यों के लिए अंतिम प्राधिकरण है।
 
 ### Identity and Signing
 
-Every action that modifies a `Site` (like adding a release or assigning a role) must be cryptographically signed. The Lens SDK supports two models for this identity:
+हर वह क्रिया जो किसी `साइट` को संशोधित करती है (जैसे रिलीज़ जोड़ना या रोल असाइन करना) को क्रिप्टोग्राफिक रूप से साइन किया जाना चाहिए। Lens SDK इस पहचान के लिए दो मॉडलों का समर्थन करता है:
 
-1. **Default Node Identity:** If you initialize `LensService` without specifying a custom identity, it will use an auto-generated identity tied to the Peerbit node itself. This is suitable for server-side scripts or headless nodes where a single, consistent identity is desired.
+1. **डिफ़ॉल्ट नोड पहचान:** यदि आप `एलेंस सर्विस` को किसी कस्टम पहचान निर्दिष्ट किए बिना प्रारंभ करते हैं, तो यह Peerbit नोड से जुड़ी एक स्वचालित रूप से उत्पन्न पहचान का उपयोग करेगा। यह सर्वर-साइड स्क्रिप्ट या हेडलेस नोड्स के लिए उपयुक्त है, जहाँ एक सिंगल, स्थिर पहचान आवश्यक होती है।
 
-2. **Custom Wallet Identity:** For user-facing applications, the recommended approach is to provide a custom identity derived from the user's own wallet (e.g., MetaMask). When you instantiate `LensService` with this custom identity, **all subsequent actions are signed by the user's wallet**. This ensures that the user, not the application node, is the true owner and author of their content. This is the foundation of data sovereignty in the Lens SDK.
+2.**कस्टम वॉलेट पहचान:** उपयोगकर्ता से संबंधित अनुप्रयोगों के लिए, अनुशंसित तरीका यह है कि उपयोगकर्ता के अपने वॉलेट (जैसे, MetaMask) से प्राप्त कस्टम पहचान प्रदान की जाए। जब आप इस कस्टम पहचान के साथ `एलेंस सर्विस` को प्रारंभ करते हैं, तो **सभी बाद के कार्य उपयोगकर्ता के वॉलेट द्वारा हस्ताक्षरित होते हैं**। यह सुनिश्चित करता है कि सामग्री का वास्तविक मालिक और लेखक उपयोगकर्ता ही है, न कि एप्लिकेशन नोड। यह Lens SDK में डेटा संप्रभुता का आधार है।
 
 ### The RBAC Components
 
-* **Administrators (`TrustedNetwork`):** At the top level is a `TrustedNetwork` of administrators. Any user whose public key is in this network is considered an **Admin**. Admins have universal permissions and are the only users who can manage the RBAC system itself (e.g., create new roles, assign roles to users, or add other Admins). The initial creator of a `Site` is its first `Admin`.
+* **Administrators (`TrustedNetwork`):** उच्च स्तर पर प्रशासकों का एक `TrustedNetwork` होता है। किसी भी उपयोगकर्ता जिसकी सार्वजनिक कुंजी इस नेटवर्क में है, उसे **Admin** माना जाता है। Admins के पास सार्वभौमिक अनुमतियाँ होती हैं और केवल वही उपयोगकर्ता हैं जो स्वयं RBAC सिस्टम का प्रबंधन कर सकते हैं (जैसे, नए रोल बनाना, उपयोगकर्ताओं को रोल असाइन करना, या अन्य Admins जोड़ना)। एक `साइट` का प्रारंभिक निर्माता इसका पहला `Admin` होता है।
 
-* **Roles:** A `Role` is a named collection of specific permissions. A `Site` is initialized with a set of default roles, and Admins can create new custom roles as needed.
+* **भूमिकाएँ:** एक `भूमिका` विशिष्ट अनुमतियों का नामित संग्रह होती है। एक `साइट` को डिफ़ॉल्ट भूमिकाओं के सेट के साथ आरंभ किया जाता है, और एडमिन आवश्यकतानुसार नई कस्टम भूमिकाएँ बना सकते हैं।
 
-* **Permissions:** A `Permission` is a granular string that represents a specific action, typically in the format `"resource:action"` (e.g., `"release:delete"`).
+* **अनुमतियाँ:** एक 'अनुमति' एक विस्तृत स्ट्रिंग है जो एक विशिष्ट क्रिया का प्रतिनिधित्व करती है, आमतौर पर प्रारूप में '"संसाधन: कार्रवाई"' (उदाहरण के लिए, '"रिलीज़: हटाएं")।
 
-* **Assignments:** An `Assignment` is a verifiable link between a user's public key and a `Role`. A user gains permissions by virtue of the roles they are assigned.
+* **असाइनमेंट:** एक `असाइनमेंट` एक उपयोगकर्ता की सार्वजनिक कुंजी और एक `भूमिका` के बीच सत्यापनीय लिंक है। उपयोगकर्ता उन भूमिकाओं के आधार पर अनुमति प्राप्त करता है जो उन्हें असाइन की गई हैं।
 
 ### Default Roles and Permissions Table
 
-A `Site` comes with a clear set of default roles, providing a sensible permission structure out of the box. An **Admin** can perform all actions listed below.
+एक `साइट` में स्पष्ट रूप से निर्धारित डिफ़ॉल्ट भूमिकाएँ होती हैं, जो तुरंत उपयोग के लिए एक तार्किक अनुमति संरचना प्रदान करती हैं। एक **एडमिन** नीचे सूचीबद्ध सभी क्रियाएँ कर सकता है।
 
-| Action / Permission (`resource:action`) | Moderator | Member | Guest | Description                                                              |
+| क्रिया / अनुमति (`resource:action`) | मॉडरेटर | सदस्य | अतिथि | विवरण                                                              |
 |-----------------------------------------|:---------:|:------:|:-----:|--------------------------------------------------------------------------|
-| **`release:create`**                    | ✅        | ✅     | ❌    | Can publish new `Release` documents.                                     |
-| **`release:edit:own`**                  | ✅        | ✅     | ❌    | Can edit `Release` documents they personally posted.                     |
-| **`release:edit:any`**                  | ✅        | ❌     | ❌    | Can edit `Release` documents posted by *any* user on the site.           |
-| **`release:delete`**                    | ✅        | ❌     | ❌    | Can delete any `Release` from the site.                                  |
-| **`featured:manage`**                   | ✅        | ❌     | ❌    | Can create, edit, or delete `FeaturedRelease` entries.                   |
-| **`category:manage`**                   | ✅        | ❌     | ❌    | Can create, edit, or delete `ContentCategory` documents.                 |
-| **`blocklist:manage`**                  | ✅        | ❌     | ❌    | Can create or delete `BlockedContent` entries.                           |
-| **`subscription:manage`**               | ✅        | ❌     | ❌    | Can subscribe to or unsubscribe from other sites.                        |
+| **`release:create`**                    | ✅        | ✅     | ❌    | नई `रिलीज़` प्रकाशित कर सकते हैं दस्तावेज़.                                     |
+| **`release:edit:own`**                  | ✅        | ✅     | ❌    | वे जिन `रिलीज़` दस्तावेज़ों को उन्होंने स्वयं पोस्ट किया है, उन्हें संपादित कर सकते हैं।                     |
+| **`release:edit:any`**                  | ✅        | ❌     | ❌    | साइट पर किसी भी उपयोगकर्ता द्वारा पोस्ट किए गए `Release` दस्तावेज़ को संपादित कर सकते हैं.           |
+| **`release:delete`**                    | ✅        | ❌     | ❌    | साइट से किसी भी `रिलीज़` को हटाया जा सकता है.                                  |
+| **`featured:manage`**                   | ✅        | ❌     | ❌    | सृजन कर सकते हैं, संपादित कर सकते हैं, या हटा सकते हैं
+`FeaturedRelease` प्रविष्टियाँ.                   |
+| **`category:manage`**                   | ✅        | ❌     | ❌    | सृजन कर सकते हैं, संपादित कर सकते हैं, या हटा सकते हैं
+`ContentCategory` दस्तावेज़.                 |
+| **`blocklist:manage`**                  | ✅        | ❌     | ❌    | बना या हटाया जा सकता है
+`BlockedContent` प्रविष्टियाँ.                           |
+| **`subscription:manage`**               | ✅        | ❌     | ❌    | अन्य साइटों की सदस्यता ले सकते हैं या सदस्यता समाप्त कर सकते हैं।.                        |
 
-* **Guest (Implicit Role):** This is the default status for any user who is not an Admin and has not been assigned any roles. `Guests` have read-only access and cannot perform any write operations.
+* **अतिथि (अप्रत्यक्ष भूमिका):** यह किसी भी उपयोगकर्ता के लिए डिफ़ॉल्ट स्थिति है जो एडमिन नहीं है और जिसे कोई भूमिका नहीं सौंपी गई है। `अतिथि` केवल पढ़ सकते हैं और कोई लिखने का कार्य नहीं कर सकते।
 
 ### Federation and Permissions
 
-The RBAC model extends intelligently to federated content. While trust is primarily based on the subscription, the Lens SDK provides a powerful override: **a local `Admin` or `Moderator` can always act on federated content** (e.g., delete a stale post from an unsubscribed site). This ensures that local site owners maintain ultimate control over the content stored in their databases.
+RBAC मॉडल संघीय सामग्री तक बुद्धिमानी से विस्तारित होता है। जबकि भरोसा मुख्य रूप से सदस्यता पर आधारित होता है, Lens SDK एक शक्तिशाली अधिलेख प्रदान करता है: **एक स्थानीय `प्रशासक` या `मध्यस्थ` हमेशा संघीय सामग्री पर कार्रवाई कर सकता है** (उदा., किसी अनसदस्यित साइट से पुरानी पोस्ट हटाना)। यह सुनिश्चित करता है कि स्थानीय साइट मालिक अपने डेटाबेस में संग्रहित सामग्री पर अंतिम नियंत्रण बनाए रखें।

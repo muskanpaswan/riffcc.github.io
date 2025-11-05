@@ -5,24 +5,24 @@ title = 'Quick Start'
 weight = 1
 +++
 
-This guide provides a step-by-step walkthrough to get a basic application running with the Lens SDK. By the end of this guide, you will have initialized the service, created a new `Site`, populated it with default content categories, added content, and retrieved it.
+यह गाइड Lens SDK के साथ एक मूल एप्लिकेशन चलाने के लिए चरण-दर-चरण मार्गदर्शन प्रदान करता है। इस गाइड के अंत तक, आप सेवा को प्रारंभ कर चुके होंगे, एक नया `साइट` बनाया होगा, इसे डिफ़ॉल्ट सामग्री श्रेणियों से भरा होगा, सामग्री जोड़ी होगी, और उसे पुनः प्राप्त किया होगा।
 
-### Prerequisites
+### प्रीरेक्वज़ट
 
-* Node.js (v18 or higher recommended)
-* A TypeScript-ready project environment
+* Node.js (v18 या उससे ऊपर की अनुशंसित)
+* एक TypeScript-तैयार प्रोजेक्ट वातावरण
 
-### Step 1: Installation
+### चरण 1: इंस्टॉलेशन
 
-First, add the Lens SDK to your project dependencies.
+पहले, अपने प्रोजेक्ट निर्भरताओं में Lens SDK जोड़ें।
 
 ```bash
 pnpm install @riffcc/lens-sdk
 ```
 
-### Step 2: Initializing the `LensService`
+### चरण 2: `एलेंस सर्विस`  शुरू करना
 
-The `LensService` is the primary entry point for all SDK functionality. The first step is to create an instance and initialize its underlying P2P client.
+`एलेंस सर्विस` सभी SDK कार्यक्षमताओं के लिए मुख्य प्रवेश बिंदु है। पहला कदम एक उदाहरण बनाना और इसके अंतर्निहित P2P क्लाइंट को प्रारंभ करना है।
 
 ```typescript
 import { LensService } from '@riffcc/lens-sdk';
@@ -49,9 +49,9 @@ async function main() {
 main().catch(console.error);
 ```
 
-### Step 3: Creating and Opening a `Site`
+### चरण 3: `साइट` तैयार करना और उसे खोलना
 
-A `Site` is your decentralized content hub. To create a new one, you instantiate the `Site` program with your public key as the root administrator and then ask the service to open it.
+`साइट` आपका विकेन्द्रित सामग्री केंद्र है। नया साइट बनाने के लिए, आप `साइट` प्रोग्राम को अपने सार्वजनिक कुंजी के साथ मुख्य प्रशासक के रूप में आरंभ करते हैं और फिर सेवा से इसे खोलने के लिए कहते हैं।
 
 ```typescript
 // Inside your main() function, after lens.init()
@@ -70,11 +70,11 @@ const siteAddress = lens.siteProgram.address;
 console.log(`Site created and opened successfully! Address: ${siteAddress}`);
 ```
 
-> **Using a Custom Identity:** The example above uses the default identity automatically generated for the Peerbit node. For user-facing applications, the recommended approach is to use the user's own wallet (like MetaMask) as the identity. To learn how to implement this, please see the **Using a Wallet for User Identity** section in our [Advanced Topics guide](/docs/lens-sdk/advanced-topics/#1-using-a-wallet-for-user-identity).
+> **कस्टम पहचान का उपयोग करना:** ऊपर दिया गया उदाहरण Peerbit नोड के लिए स्वचालित रूप से उत्पन्न डिफ़ॉल्ट पहचान का उपयोग करता है। उपयोगकर्ता-सामना करने वाले अनुप्रयोगों के लिए, अनुशंसित तरीका यह है कि उपयोगकर्ता की अपनी वॉलेट (जैसे MetaMask) को पहचान के रूप में उपयोग किया जाए। इसे लागू करने के तरीके को जानने के लिए, कृपया हमारे [उन्नत विषय गाइड](/docs/lens-sdk/advanced-topics/#1-using-a-wallet-for-user-identity) में **उपयोगकर्ता पहचान के लिए वॉलेट का उपयोग करना** अनुभाग देखें।
 
-### Step 4: Initializing Site Content Categories
+### चरण 4: साइट सामग्री श्रेणियां आरंभ करना
 
-A new `Site` is empty by default. As the root administrator, you should initialize it with a set of `ContentCategory` documents. This is a one-time operation that populates the site with the necessary templates for posting content.
+एक नया `साइट` डिफ़ॉल्ट रूप से खाली होता है। रूट व्यवस्थापक के रूप में, आपको इसे `ContentCategory` दस्तावेज़ों के एक सेट के साथ प्रारंभ करना चाहिए। यह एक एकमुश्त ऑपरेशन है जो साइट को सामग्री पोस्ट करने के लिए आवश्यक टेम्पलेट से भर देता है।
 
 ```typescript
 // Inside your main() function, after lens.openSite()
@@ -85,9 +85,9 @@ await lens.siteProgram.initializeDefaultContentCategories();
 console.log("Default categories initialized successfully.");
 ```
 
-### Step 5: Adding Content (Creating a `Release`)
+### चरण 5: सामग्री जोड़ना (`रिलीज़` बनाना)
 
-Now that the `Site` has been initialized with categories, you can add content. Let's add your first `Release`, linking it to the default `"music"` category.
+अब जब कि `Site` को श्रेणियों के साथ शुरू कर दिया गया है, आप सामग्री जोड़ सकते हैं। आइए आपका पहला `Release` जोड़ें और इसे डिफ़ॉल्ट `"music"` श्रेणी से जोड़ें।
 
 ```typescript
 // Inside your main() function, after initializing categories
@@ -109,9 +109,9 @@ if (response.success) {
 }
 ```
 
-### Step 6: Retrieving Content
+### चरण 6: सामग्री पुनःप्राप्त करना
 
-Finally, let's verify that the content was saved by retrieving all releases from the site.
+अंत में, आइए यह सत्यापित करें कि सामग्री सहेजी गई थी या नहीं, साइट से सभी रिलीज़ प्राप्त करके।
 
 ```typescript
 // Inside your main() function, after adding the release
@@ -125,4 +125,4 @@ allReleases.forEach(release => {
 });
 ```
 
-Congratulations! You have successfully created a decentralized `Site`, initialized it, managed permissions, added content, and retrieved it. From here, explore the [Core Concepts](./core-concepts) or consult the [API Reference](./api-reference).
+बधाई हो! आपने सफलतापूर्वक एक विकेंद्रीकृत `Site` बनाई, इसे प्रारंभ किया, अनुमतियों का प्रबंधन किया, सामग्री जोड़ी, और उसे पुनः प्राप्त किया। यहां से, [मुख्य अवधारणाओं](./core-concepts) का अन्वेषण करें या [API संदर्भ](./api-reference) की सलाह लें।
