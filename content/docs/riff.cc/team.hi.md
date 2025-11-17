@@ -5,7 +5,7 @@ title = 'Team'
 weight = 2
 +++
 
-We have a small but passionate team of developers, engineers, and curators.
+हमारे पास डेवलपर्स, इंजीनियरों और क्यूरेटरों की एक छोटी लेकिन उत्साही टीम है।
 
 {{< cards >}}
   {{< card title="माइकेला एंडरस"
